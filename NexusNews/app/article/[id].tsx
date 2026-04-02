@@ -20,7 +20,9 @@ export default function ArticleDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { isDarkMode } = useThemeStore();
-  const { isSaved, saveArticle, removeArticle } = useBookmarkStore();
+  const savedArticles = useBookmarkStore((state) => state.savedArticles);
+  const saveArticle = useBookmarkStore((state) => state.saveArticle);
+  const removeArticle = useBookmarkStore((state) => state.removeArticle);
   
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
@@ -107,7 +109,7 @@ export default function ArticleDetailScreen() {
 
   const handleBookmark = () => {
     if (!article) return;
-    if (isSaved(article.id)) {
+    if (savedArticles.some((a) => a.id === article.id)) {
       removeArticle(article.id);
     } else {
       saveArticle(article);
@@ -137,7 +139,7 @@ export default function ArticleDetailScreen() {
     );
   }
 
-  const saved = isSaved(article.id);
+  const saved = savedArticles.some((a) => a.id === article?.id);
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>

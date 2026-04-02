@@ -17,8 +17,9 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article, onPress, index = 0 }: ArticleCardProps) {
   const { isDarkMode } = useThemeStore();
-  const { isSaved, saveArticle, removeArticle } = useBookmarkStore();
-  const saved = isSaved(article.id);
+  const saved = useBookmarkStore((state) => state.savedArticles.some((a) => a.id === article.id));
+  const saveArticle = useBookmarkStore((state) => state.saveArticle);
+  const removeArticle = useBookmarkStore((state) => state.removeArticle);
 
   const textColor = isDarkMode ? COLORS.dark.text : COLORS.text;
   const textSecondaryColor = isDarkMode ? COLORS.dark.textSecondary : COLORS.textSecondary;
@@ -85,7 +86,7 @@ export default function ArticleCard({ article, onPress, index = 0 }: ArticleCard
               {saved ? (
                 <Bookmark size={20} color={COLORS.primary} strokeWidth={2} fill={COLORS.primary} />
               ) : (
-                <Bookmark size={20} color={COLORS.primary} strokeWidth={2} />
+                <Bookmark size={20} color={COLORS.primary} strokeWidth={2} fill="transparent" />
               )}
             </TouchableOpacity>
           </View>
